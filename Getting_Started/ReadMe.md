@@ -83,3 +83,69 @@ public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
 
 Упоминается директория `wwwroot`.
 
+## Использование кода в Blazor
+
+Два способа:
+* Как в примере (используется `@code` вместе с html) - не рекомендуется так делать в реальных проектах.
+```html
+@page "/counter"
+
+<h1>Counter</h1>
+<p>Current count: @currentCount</p>
+<button class="btn btn-primary" @onclick="IncrementCount">Click me</button>
+
+@code {
+    int currentCount = 0;
+    void IncrementCount()
+    {
+        currentCount++;
+    }
+}
+```
+
+* Code-behind approach. Выделение исполняемого кода в отдельный файл. Рекомендуется так делать.
+В данном tutorial будет использован именно этот подход.
+```csharp
+public class EmployeeOverviewBase : ComponentBase
+{
+    ...
+}
+```
+
+И referencing:
+```html
+@page "/employeeoverview"
+@inherits EmployeeOverviewBase
+...
+```
+
+### Инициализация классов-наследников от `ComponentBase`
+
+Для инициаизации `EmployeeOverviewBase` используется не конструктор, а перегруженный метод
+`OnInitializedAsync()` (рекомендуется так делать):
+```csharp
+protected override Task OnInitializedAsync()
+{
+    InitializeCountries();
+    InitializeJobCategories();
+    InitializeEmployees();
+
+    return base.OnInitializedAsync();
+}
+```
+
+* *Роутинг*
+
+  Примеры:
+  ```html
+  @page "/employeeoverview"
+  @page "/employeedetail/{EmployeeId}"
+  ```
+
+* *Передача параметра в класс, производный от `ComponentBase` из razor*
+
+  Используется свойство с атрибутом `Parameter`:
+  ```csharp
+  [Parameter]
+  public string EmployeeId { get; set; }
+  ```
