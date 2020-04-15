@@ -149,3 +149,16 @@ protected override Task OnInitializedAsync()
   [Parameter]
   public string EmployeeId { get; set; }
   ```
+
+### Добавление параметра для включения показа отладочной инфомации в браузере.
+  
+В `Startup в ConfigureServices добавить`:
+```csharp 
+public void ConfigureServices(IServiceCollection services)
+{
+    ...
+    services.AddServerSideBlazor().AddCircuitOptions(options => options.DetailedErrors = true);
+}
+```
+
+Теперь в консоли браузера можно увидеть более подробную информацию об ошибках.
