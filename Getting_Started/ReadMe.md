@@ -166,7 +166,7 @@ public void ConfigureServices(IServiceCollection services)
 
 ## Working with data
 
-3 способа доступа к данным:
+### 3 способа доступа к данным
 
 * *Entity Framework Core*. Доступен только для серверного Blazor.
 
@@ -175,3 +175,78 @@ public void ConfigureServices(IServiceCollection services)
 
 * *Local Storage*. Доступен для клиентского Blazor.
 
+### Разновидности HttpClient
+
+*Используется для взаимодействия с REST API.*
+
+* `HttpClient (из System.Net.Http)` - может использоваться на серверном и клиентском Blazor.
+
+* `IHttpClientFactory` (введен в Net Core 2.1) - используется только на серверном Blazor.
+Рекомендуется использовать by MS. Демонстрируется в данном курсе.
+
+* `HttpClient` - используется только на клиентском Blazor. В данном курсе не демонстрируется.
+
+### Using the HttpClientFactory
+
+#### Конфигурирование (регистрация) IHttpClientFactory
+
+*Для использования в компоненте*
+
+```csharp
+public void ConfigureServices(IServiceCollection services)
+{
+    ...
+    services.AddHttpClient();
+    ...
+}
+```
+
+#### Using the HttpClient in a Component
+
+Используется в ComponentBase классах:
+```csharp
+[Inject]
+public IHttpClientFactory _clientFactory { get; set; }
+```
+
+#### Использование HttpClient в качестве сервиса (рекомендуемый путь)
+
+Лучше для взаимодействия с REST API использовать отдельный класс:
+
+```csharp
+public class EmployeeDataService : IEmployeeDataService
+{
+    private readonly HttpClient _httpClient;
+
+    public EmployeeDataService(HttpClient httpClient)
+    {
+        _httpClient = httpClient;
+    }
+}
+```
+
+Регистрация IEmployeeDataService через AddHttpClient в DI:
+
+```csharp
+public void ConfigureServices(IServiceCollection services)
+{
+    ...
+    services.AddHttpClient<IEmployeeDataService, EmployeeDataService>(client =>
+    {
+        client.BaseAddress = new Uri("url_of_server_with_REST_API");
+    });
+    ...
+}
+```
+
+Использование в ComponentBase классах:
+```csharp
+[Inject]
+public IEmployeeDataService EmployeeDataService { get; set; }
+```
+
+### Запуск проекта
+
+Надо запускать два проекта:
+* Server с REST API.
+* Server с Blazor.

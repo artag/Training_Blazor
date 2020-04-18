@@ -1,3 +1,5 @@
+using System;
+using BethanysPieShopHRM.Server.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -21,6 +23,10 @@ namespace BethanysPieShopHRM.Server
         {
             services.AddRazorPages();
             services.AddServerSideBlazor().AddCircuitOptions(options => options.DetailedErrors = true);
+
+            services.AddHttpClient<IEmployeeDataService, EmployeeDataService>(client =>
+                client.BaseAddress = new Uri("https://localhost:44340/")
+            );
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
