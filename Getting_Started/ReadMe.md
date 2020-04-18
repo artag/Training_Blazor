@@ -162,3 +162,16 @@ public void ConfigureServices(IServiceCollection services)
 ```
 
 Теперь в консоли браузера можно увидеть более подробную информацию об ошибках.
+
+
+## Working with data
+
+3 способа доступа к данным:
+
+* *Entity Framework Core*. Доступен только для серверного Blazor.
+
+* *REST API*. Доступен для серверного и клиентского Blazor. Наиболее универсален. 
+Используется для демонстрации в данном курсе.
+
+* *Local Storage*. Доступен для клиентского Blazor.
+
