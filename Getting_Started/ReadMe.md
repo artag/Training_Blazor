@@ -297,8 +297,8 @@ public Employee Employee { get; set; }
 Значение свойства `Employee.LastName` в компонента будет меняться сразу, при изменении значения в
 поле ввода на UI.
 ```csharp
-<input id="lastName" @bind-value="@Employee.LastName"
-    @bind-value:event="oninput"
+<input id="lastName" @bind-Value="@Employee.LastName"
+    @bind-Value:event="oninput"
     placeholder="Enter last name" />
 ```
 
@@ -306,4 +306,36 @@ public Employee Employee { get; set; }
 
 Пример трех видов binding'ов можно увидеть в примере `DataBindingSample`.
 
+### Forms in Blazor
+
+Функциональность форм:
+
+* Input component (ввод данных)
+* Data binding
+* Validation (валидация вводимых данных)
+
+#### Input Component
+
+*Используемые компоненты для ввода в Blazor это обертка вокруг стандартных html элементов.*
+
+* *InputText* - ввод одной строки.
+* *InputTextArea* - ввод нескольких текстовых строк.
+* *InputNumber* - ввод чисел.
+* *InputSelect* - выпадающий список.
+* *InputDate* - выбор даты.
+* *InputCheckbox* - checkbox.
+
+#### Пример создания формы
+
+```html
+<EditForm Model="@Employee"
+    OnValidSubmit="@HandleValidSubmit"
+    OnInvalidSubmit="@HandleInvalidSubmit">
+
+    <InputText id="lastName"
+        @bind-Value="@Employee.LastName"
+        placeholder="Enter last name">
+    </InputText>
+</EditForm>
+```
 
