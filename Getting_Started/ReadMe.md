@@ -250,3 +250,60 @@ public IEmployeeDataService EmployeeDataService { get; set; }
 Надо запускать два проекта:
 * Server с REST API.
 * Server с Blazor.
+
+
+### Data binding support in Blazor
+
+* One-way
+* Two-way
+* Component parameter
+
+#### One-way Binding
+
+*Изменения в коде автоматически отображаются на UI.*
+
+Значения свойств `@Employee.FirstName` и `@Employee.LastName` будут отображаться на UI.
+Ввода значения из UI нет.
+```csharp
+<h1 class="page-title">
+    Details for @Employee.FirstName @Employee.LastName
+</h1>
+
+public Employee Employee { get; set; }
+```
+
+Binding внутри элемента.
+
+Значение свойства `@Employee.FirstName` будет отображено на UI. Ввода значения из UI нет.
+```csharp
+<label type="text" readonly class="form-control-plaintext">
+    @Employee.FirstName
+</label>
+
+public Employee Employee { get; set; }
+```
+
+#### Two-way Binding
+
+Пример, ввод текста в UI. Значение свойства `Employee.LastName` в компоненте изменится после
+смены фокуса из поля ввода на UI:
+```csharp
+<input id="lastName" @bind="@Employee.LastName"
+    placeholder="Enter last name" />
+```
+
+#### Two-way binding on a Different Event
+
+Значение свойства `Employee.LastName` в компонента будет меняться сразу, при изменении значения в
+поле ввода на UI.
+```csharp
+<input id="lastName" @bind-value="@Employee.LastName"
+    @bind-value:event="oninput"
+    placeholder="Enter last name" />
+```
+
+#### Пример
+
+Пример трех видов binding'ов можно увидеть в примере `DataBindingSample`.
+
+
