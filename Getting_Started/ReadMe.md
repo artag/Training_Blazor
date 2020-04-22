@@ -297,8 +297,8 @@ public Employee Employee { get; set; }
 Значение свойства `Employee.LastName` в компонента будет меняться сразу, при изменении значения в
 поле ввода на UI.
 ```csharp
-<input id="lastName" @bind-Value="@Employee.LastName"
-    @bind-Value:event="oninput"
+<input id="lastName" @bind-value="@Employee.LastName"
+    @bind-value:event="oninput"
     placeholder="Enter last name" />
 ```
 
