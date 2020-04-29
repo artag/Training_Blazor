@@ -339,3 +339,30 @@ public Employee Employee { get; set; }
 </EditForm>
 ```
 
+### Добавление навигации
+
+*Переход на другую страницу.*
+
+Пример добалвения кнопки перехода на другую страницу.
+EmployeeEditBase.cs
+```csharp
+public class EmployeeEditBase : ComponentBase
+{
+    [Inject]
+    public NavigationManager NavigationManager { get; set; }
+
+    // ...
+
+    protected void NavigateToOverview()
+    {
+        NavigationManager.NavigateTo("/employeeoverview");
+    }
+}
+```
+`NavigationManager` уже зарегистрирован к контейнере.
+
+`EmployeeEdit.razor`
+```html
+<a class="btn btn-outline-primary"
+   @onclick="NavigateToOverview">Back to overview</a>
+```
