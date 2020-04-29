@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Net.Http;
+using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 using BethanysPieShopHRM.Shared;
@@ -9,6 +10,8 @@ namespace BethanysPieShopHRM.Server.Services
 {
     public class EmployeeDataService : IEmployeeDataService
     {
+        private const string MediaType = "application/json";
+
         private readonly HttpClient _httpClient;
 
         public EmployeeDataService(HttpClient httpClient)
@@ -16,14 +19,24 @@ namespace BethanysPieShopHRM.Server.Services
             _httpClient = httpClient;
         }
 
-        public Task<Employee> AddEmployee(Employee employee)
+        public async Task<Employee> AddEmployee(Employee employee)
         {
-            throw new NotImplementedException();
+            var content = JsonSerializer.Serialize(employee);
+            var employeeJson = new StringContent(content, Encoding.UTF8, MediaType);
+
+            var response = await _httpClient.PostAsync("api/employee", employeeJson);
+            if (response.IsSuccessStatusCode)
+            {
+                var contentStream = await response.Content.ReadAsStreamAsync();
+                return await JsonSerializer.DeserializeAsync<Employee>(contentStream);
+            }
+
+            return null;
         }
 
-        public Task DeleteEmployee(int id)
+        public async Task DeleteEmployee(int id)
         {
-            throw new NotImplementedException();
+            await _httpClient.DeleteAsync($"api/employee/{id}");
         }
 
         public async Task<IEnumerable<Employee>> GetAllEmployees()
@@ -48,9 +61,12 @@ namespace BethanysPieShopHRM.Server.Services
             return data;
         }
 
-        public Task UpdateEmployee(Employee employee)
+        public async Task UpdateEmployee(Employee employee)
         {
-            throw new NotImplementedException();
+            var content = JsonSerializer.Serialize(employee);
+            var employeeJson = new StringContent(content, Encoding.UTF8, MediaType);
+
+            await _httpClient.PutAsync("api/employee", employeeJson);
         }
     }
 }
