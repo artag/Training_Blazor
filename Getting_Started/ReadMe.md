@@ -339,6 +339,47 @@ public Employee Employee { get; set; }
 </EditForm>
 ```
 
+#### Adding Validation
+
+*Blazor Forms поддерживают валидацию вводимых данных "из коробки"*.
+
+* Similar to ASP.NET Core validations
+
+* Data annotations (добавление аннотаций в модель данных (в свойства) для валидации вводимых данных в соответствующие поля)
+
+* DataAnnotationsValidator
+
+* ValidationSummary (вывод итоговой информации по всем ошибкам в веденных данных)
+
+Для использования аннотаций:
+
+1. Необходимо поставить nuget пакет `System.ComponentModel.Annotations` (в проект с классами-моделями).
+2. Пометить атрибутами проверяемые свойства в модели (в примере - класс `Employee`).
+3. На `EditForm` добавить следующие компоненты:
+  3.1. `DataAnnotationsValidator` - для включения валидации на форме
+  3.2. `ValidationSummary` - для показа суммарной информации об ошибках на форме
+  3.3. `ValidationMessage` - для показа только одной ошибки
+
+3.2. и 3.3. можно использовать как вместе, так и отдельно.
+  
+Пример `EditForm` с валидацией:
+```html
+<EditForm Model="@Employee" OnValidSubmit="@HandleValidSubmit">
+
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div class="form-group row">
+        <label for="lastName" class="col-sm-3">Last name: </label>
+        <InputText id="lastName" class="form-control col-sm-8"
+                   placeholder="Enter last name"
+                   @bind-Value="@Employee.LastName">
+        </InputText>
+        <ValidationMessage class="offset-sm-3 col-sm-8" For="@(() => Employee.FirstName)"/>
+    </div>
+</EditForm>
+```
+
 ### Добавление навигации
 
 *Переход на другую страницу.*
