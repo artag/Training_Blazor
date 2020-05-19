@@ -5,6 +5,16 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Include="..\BethanysPieShopHRM.ComponentsLibrary\wwwroot\leaflet\leaflet.css" Link="wwwroot\css\leaflet.css" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\BethanysPieShopHRM.ComponentsLibrary\wwwroot\deliveryMap.js" Link="wwwroot\js\deliveryMap.js" />
+    <None Include="..\BethanysPieShopHRM.ComponentsLibrary\wwwroot\leaflet\leaflet.js" Link="wwwroot\js\leaflet.js" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\BethanysPieShopHRM.ComponentsLibrary\BethanysPieShopHRM.ComponentsLibrary.csproj" />
     <ProjectReference Include="..\BethanysPieShopHRM.Shared\BethanysPieShopHRM.Shared.csproj" />
   </ItemGroup>
 

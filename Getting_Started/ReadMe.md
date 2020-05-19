@@ -458,9 +458,9 @@ public void Show()
 }
 ```
 
-#### Demo 1.
+#### Demo. Добавление диалогового окна. Взаимодействие с родительским компонентом
 
-*Добавление компонента - диалоговое окно*.
+*Добавление компонента - диалоговое окно. Для быстрого добавления нового сотрудника*.
 
 Особенности:
 * Имя добавляемого диалоговое окно AddEmployeeDialog.razor и AddEmployeeDialogBase.cs.
@@ -533,6 +533,7 @@ public void Show()
 
 #### Injecting IJSRuntime
 
+Доступ через Runtime Injection:
 ```csharp
 [Inject]
 public IJSRuntime JsRuntime { get; set; }
@@ -556,3 +557,30 @@ public IJSRuntime JsRuntime { get; set; }
 var result = await
 JsRuntime.InvokeAsync<object>("DoSomething", "");
 ```
+
+#### Demo. Взаимодействие с JavaScript
+
+*Добавление карты (на JavaScript) на страницу с деталями сотрудника.*
+
+Особенности:
+* Добавляемый проект `BethanysPieShopHRM.ComponentsLibrary`, который содержит компонент с картой -
+это библиотека Razor Class Library (.NET Standart 2.0 + Razor).
+
+* В `Map\Map.razor` взаимодействует с JavaScript.
+
+* В `wwwroot` находятся файлы JavaScript и css.
+
+* В `Map.razor` передается elementId и Markers (как параметры).
+
+В проекте `BethanysPieShopHRM.Server`
+
+* В `Pages\_Host.cshtml` добавляются css и js ссылки на новые файлы.
+
+* В `_Imports.razor` добавляются using для новых namespace.
+
+Не получилось:
+* В `Pages\_Host.cshtml` странно добавились ссылки на css и js файлы из другого проекта 
+(упорно указывается другой путь).
+
+* Оформление на странице EmployeeDetail.razor.
+Наблюдался сдвиг карты вниз, пришлось поколдовать самому над bootstrap.
