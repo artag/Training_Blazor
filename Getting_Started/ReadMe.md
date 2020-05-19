@@ -385,7 +385,8 @@ public Employee Employee { get; set; }
 *Переход на другую страницу.*
 
 Пример добалвения кнопки перехода на другую страницу.
-EmployeeEditBase.cs
+
+EmployeeEditBase.cs:
 ```csharp
 public class EmployeeEditBase : ComponentBase
 {
@@ -402,8 +403,156 @@ public class EmployeeEditBase : ComponentBase
 ```
 `NavigationManager` уже зарегистрирован к контейнере.
 
-`EmployeeEdit.razor`
+EmployeeEdit.razor:
 ```html
 <a class="btn btn-outline-primary"
    @onclick="NavigateToOverview">Back to overview</a>
+```
+
+## Adding Features to the App
+
+### Adding a Dialog Component
+
+*Component are building block
+  * Page
+  * Dialog
+* Reuse of functionality
+* Make large pages smaller
+* Can be nested (могут быть вложенными)
+* In-project or separate library (могут располагаться внутри проекта или в отдельной библиотеке)
+* Can receive parameters (может получать параметры из верхнего компонента)
+* Event binding for component communication (может коммуницировать с другими компонентами, используя события)
+
+#### Директории в проекте, содержащие компоненты
+
+* Pages (компоненты генерируют страницы и их части)
+* Shared
+* Components
+
+#### Using `_Imports.razor`
+
+*Содержит using импортируемых namespace'ов.*
+
+Пример:
+```
+@using BethanysPieShopHRM.Server.Components
+```
+
+#### Component Lifecycle Methods
+
+1. `OnInitialized` / `OnInitializedAsync` (используется для инициализации, код в конструкторе выбросит исключение)
+2. `OnParametersSet` / `OnParametersSetAsync` (устанавливаются параметры из верхнего/родительского компонента)
+3. `OnAfterRender` / `OnAfterRenderAsync` (после отрисовки)
+
+#### Ручное обновление Razor страницы из кода компонента
+
+*Вызов метода `StateHasChanged()`*.
+
+Из `AddEmployeeDialogBase.cs`:
+```csharp
+public void Show()
+{
+    ResetDialog();
+    ShowDialog = true;
+    StateHasChanged();
+}
+```
+
+#### Demo 1.
+
+*Добавление компонента - диалоговое окно*.
+
+Особенности:
+* Имя добавляемого диалоговое окно AddEmployeeDialog.razor и AddEmployeeDialogBase.cs.
+
+* Директория Components (туда помещается диалоговое окно).
+
+* Диалоговое окно реализовывается средствами bootstrap (modal).
+
+* Компонент EmployeeOverview родительский по отношению к AddEmployeeDialog.
+
+* Вызов StateHasChanged() вручную обновляет DOM.
+
+* В _Imports.razor добавляется namespace Components.
+
+* В EmployeeOverview.razor добавляется компонент AddEmployeeDialog со ссылкой `@ref=AddEmployeeDialog`.
+  ```html
+  <AddEmployeeDialog @ref="AddEmployeeDialog"></AddEmployeeDialog>
+  ```
+
+* В EmployeeOverview.cs вставляется свойство для управления дочерним компонентом:
+  ```csharp
+  protected AddEmployeeDialog AddEmployeeDialog { get; set; }
+
+  protected void QuickAddEmployee()
+  {
+      AddEmployeeDialog.Show();
+  }
+  ```
+
+* Для включения перерисовки родительского компонента при сохранении и закрытии дочернего компонента (диалогового окна):
+  * В `EmployeeOverview.razor`, в компонент AddEmployeeDialog добавляется CloseEventCallback:
+  ```html
+  <AddEmployeeDialog @ref="AddEmployeeDialog" CloseEventCallback="@AddEmployeeDialog_OnDialogClose">
+  </AddEmployeeDialog>
+  ```
+  * В `AddEmployeeDialogBase.cs` добавляется свойство и его вызов при сохранении и закрытии
+  дочернего компонента (диалогового окна):
+  ```csharp
+  [Parameter]
+  public EventCallback<bool> CloseEventCallback { get; set; }
+
+  protected async Task HandleValidSubmit()
+  {
+      ...
+      await CloseEventCallback.InvokeAsync(true);
+      StateHasChanged();
+  }
+  ```
+  В `EmployeeOverview.cs` добавляется 
+  ```csharp
+  public async void AddEmployeeDialog_OnDialogClose()
+  {
+      ...
+      StateHasChanged();
+  }
+  ```
+
+### Integrating a JavaScript Component
+
+* Not everything is possible via just .NET
+* JavaScript interop
+  * Call into JavaScript from Blazor code
+* Runs on the client
+
+#### JavaScript Interop
+
+* .NET code calls into JavaScript
+* JavaScript calls into .NET code
+* Can be wrapped in a library
+
+#### Injecting IJSRuntime
+
+```csharp
+[Inject]
+public IJSRuntime JsRuntime { get; set; }
+```
+
+#### Adding a Script
+
+Пример:
+```javascript
+<script>
+    window.DoSomething = () => {
+        //do some interesting task here
+    }
+</script>
+```
+
+#### Calling into JavaScript
+
+Пример:
+```csharp
+var result = await
+JsRuntime.InvokeAsync<object>("DoSomething", "");
 ```

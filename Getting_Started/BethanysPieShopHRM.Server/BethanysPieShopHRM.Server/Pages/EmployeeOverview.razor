@@ -1,7 +1,7 @@
 ﻿@page "/employeeoverview"
 @inherits EmployeeOverviewBase
 
-<h1 class="modal-title">All employees</h1>
+<h1 class="page-title">All employees</h1>
 
 @if (Employees == null)
 {
@@ -46,3 +46,9 @@ else
         </tbody>
     </table>
 }
+
+<button @onclick="@QuickAddEmployee" class="btn btn-dark table-btn quick-add-btn">
+    &nbsp;&nbsp;+&nbsp;&nbsp;
+</button>
+
+<AddEmployeeDialog @ref="AddEmployeeDialog" CloseEventCallback="@AddEmployeeDialog_OnDialogClose"></AddEmployeeDialog>
