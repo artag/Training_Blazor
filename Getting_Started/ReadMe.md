@@ -584,3 +584,86 @@ JsRuntime.InvokeAsync<object>("DoSomething", "");
 
 * Оформление на странице EmployeeDetail.razor.
 Наблюдался сдвиг карты вниз, пришлось поколдовать самому над bootstrap.
+
+## Preparing for Client-side Blazor
+
+* *Кратко рассказывается про перенос кодовой базы в билиотеку для общего использования как на сервере, так и на клиенте Blazor.*
+
+* *Быстро показывается процесс создания проекта Blazor client с нуля.*
+
+### Start preparing
+
+*Примерная последовательность действий по выделению общих библиотек для создания общеиспользуемого кода.*
+
+* Ensure your app can be easily switched.
+* Extract what is different.
+* Share most of the code.
+
+### Things to consider
+
+*Что принимать во внимание в первую очередь при миграции с сервера на клиент.*
+
+* HttpClient (наличие и как используется)
+* EF Core (наличие и как используется)
+* REST API
+
+#### Изменения в App Project
+
+* `_Host.cshtml` is removed
+* Project is now a Razor Class Library
+* Code can be fully reused
+
+Для запуска Blazor Server и Blazor Client создаются отдельные проекты, которые используют новую (переделанную) библиотеку Razor Class Library с
+Blazor Components.
+
+## Deploying the application
+
+*Демонстрация деплоя приложения на Azure (очень кратко и быстро).*
+
+### Server Requirements
+
+*Требования к серверу (куда будет развертываться приложение).*
+
+Для API:
+* ASP.NET Core
+* SQL Server
+
+Для Blazor App:
+* ASP.NET Core
+* Relies on SignalR Connection (дополнительное конфигурирования SignalR (сервис на Azure) для масштабирования и управления соединениями).
+
+### Used Azure Services
+
+Для API:
+* Azure App Service (Web Apps)
+* Azure SQL Database
+
+Для Blazor App:
+* Azure App Service (Web Apps)
+* Azure SignalR Service
+
+#### Azure SignalR Service
+
+* Azure implementation of SignalR
+* Scalability
+
+### Client-side Blazor deployment
+
+* No specific server requirements
+* Static files
+* Connect with API
+  * CORS
+
+## Рекомендуемые ресурсы
+
+На pluralsight.com:
+
+* Blazor: The Big Picture (Barry Luijbregts)
+* Enterprise apps with Blazor (Alex Wolf)
+* Creating Blazor Components (Roland Guijt)
+* Authentication with Blazor (Kevin Dockx)
+* JavaScript interop with Blazor (Scott Allen)
+
+Map component (компонент - карта (на JavaScript и Blazor), используемый в проекте):
+
+* https://aka.ms/blazorworkshop
